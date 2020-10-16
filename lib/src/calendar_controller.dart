@@ -326,6 +326,8 @@ class CalendarController {
         ..addAll(_daysInWeek(
           _focusedDay.add(const Duration(days: 7)),
         ));
+    } else if (calendarFormat == CalendarFormat.twentyEightDays) {
+      return _daysInPeriod(_focusedDay);
     } else {
       return _daysInWeek(_focusedDay);
     }
@@ -351,6 +353,12 @@ class CalendarController {
 
     final lastToDisplay = last.add(Duration(days: daysAfter));
     return _daysInRange(firstToDisplay, lastToDisplay).toList();
+  }
+
+  List<DateTime> _daysInPeriod(DateTime start) {
+    final last = start.add(Duration(days: 28));
+
+    return _daysInRange(start, last).toList();
   }
 
   int _getDaysBefore(DateTime firstDay) {

@@ -22,7 +22,7 @@ typedef String TextBuilder(DateTime date, dynamic locale);
 typedef bool EnabledDayPredicate(DateTime day);
 
 /// Format to display the `TableCalendar` with.
-enum CalendarFormat { month, twoWeeks, week }
+enum CalendarFormat { month, twoWeeks, week, twentyEightDays }
 
 /// Available animations to update the `CalendarFormat` with.
 enum FormatAnimation { slide, scale }
@@ -117,6 +117,7 @@ class TableCalendar extends StatefulWidget {
   /// availableCalendarFormats: const {
   ///   CalendarFormat.month: 'Month',
   ///   CalendarFormat.week: 'Week',
+  ///   CalendarFormat.twentyEightDays: '28 Days',
   /// }
   /// ```
   final Map<CalendarFormat, String> availableCalendarFormats;
@@ -184,6 +185,7 @@ class TableCalendar extends StatefulWidget {
       CalendarFormat.month: 'Month',
       CalendarFormat.twoWeeks: '2 weeks',
       CalendarFormat.week: 'Week',
+      CalendarFormat.twentyEightDays: '28 Days',
     },
     this.headerVisible = true,
     this.enabledDayPredicate,
@@ -427,7 +429,7 @@ class _TableCalendarState extends State<TableCalendar> with SingleTickerProvider
   Widget _buildCalendarContent() {
     if (widget.formatAnimation == FormatAnimation.slide) {
       return AnimatedSize(
-        duration: Duration(milliseconds: widget.calendarController.calendarFormat == CalendarFormat.month ? 330 : 220),
+        duration: Duration(milliseconds: widget.calendarController.calendarFormat == CalendarFormat.month || widget.calendarController.calendarFormat == CalendarFormat.twentyEightDays ? 330 : 220),
         curve: Curves.fastOutSlowIn,
         alignment: Alignment(0, -1),
         vsync: this,
@@ -584,7 +586,9 @@ class _TableCalendarState extends State<TableCalendar> with SingleTickerProvider
   Widget _buildCell(DateTime date) {
     if (!widget.calendarStyle.outsideDaysVisible &&
         widget.calendarController._isExtraDay(date) &&
-        widget.calendarController.calendarFormat == CalendarFormat.month) {
+        widget.calendarController.calendarFormat == CalendarFormat.month || !widget.calendarStyle.outsideDaysVisible &&
+        widget.calendarController._isExtraDay(date) &&
+        widget.calendarController.calendarFormat == CalendarFormat.twentyEightDays) {
       return Container();
     }
 
