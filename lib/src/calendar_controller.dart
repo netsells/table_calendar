@@ -356,9 +356,15 @@ class CalendarController {
   }
 
   List<DateTime> _daysInPeriod(DateTime start) {
-    final last = start.add(Duration(days: 28));
+    final daysBefore = _getDaysBefore(start);
+    final firstDayToDisplay = start.subtract(Duration(days: daysBefore));
 
-    return _daysInRange(start, last).toList();
+    final last = start.add(Duration(days: 28));
+    final daysAfter = _getDaysAfter(last);
+    final lastDayToDisplay = last.add(Duration(days: daysAfter));
+
+
+    return _daysInRange(firstDayToDisplay, lastDayToDisplay).toList();
   }
 
   int _getDaysBefore(DateTime firstDay) {
